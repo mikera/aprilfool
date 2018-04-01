@@ -19,6 +19,7 @@ import static com.jogamp.opengl.GL2ES3.GL_COLOR;
 import static com.jogamp.opengl.GL2ES3.GL_DEPTH;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -89,7 +90,8 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	public int width = 10;
 	public int height = 10;
 
-	public float DRAW_SCALE = 4.0f;
+	public float DRAW_SCALE = 6.0f;
+	public int PALETTE_SCALE = 4;
 
 	// x and y scroll in screen co-ordinates
 	public int scrollX = -400;
@@ -243,14 +245,14 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		palette=new JFrame("Tile Palette");
 		JPanel imagePanel=new JPanel();
 		imagePanel.setLayout(new BorderLayout());
-		JButton ic = new JButton(new ImageIcon(Assets.spriteImage));
+		JButton ic = new JButton(new ImageIcon(Assets.spriteImage.getScaledInstance(1024*PALETTE_SCALE,1024*PALETTE_SCALE,Image.SCALE_FAST)));
 		ic.setHorizontalAlignment(SwingConstants.LEFT);
 		ic.setVerticalAlignment(SwingConstants.TOP);
 		ic.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int x=e.getX()/8; 
-				int y=e.getY()/8;
+				int x=(int) (e.getX()/(8*PALETTE_SCALE)); 
+				int y=(int) (e.getY()/(8*PALETTE_SCALE));
 				drawType=x+y*100;
 			}			
 		});
