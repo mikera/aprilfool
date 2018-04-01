@@ -43,10 +43,10 @@
           event-type (:type event)
           tx (long (/ x 8))
           ty (long (/ y 8))
-          ]
+          c (long (.drawType app))]
 	      (cond
          :always
-           (set-tile game tx ty 0 102)
+           (set-tile game tx ty 0 c)
          :else
             (do 
               (println "Click event type not recognised: " event)

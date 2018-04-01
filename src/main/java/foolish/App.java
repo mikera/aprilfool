@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -38,7 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -46,6 +49,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -111,6 +115,8 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	double lastTime = 0.0f;
 
 	public Object renderGameState = null;
+	
+	public int drawType=102;
 
 	private final int ATTR_POSITION = 0;
 	private final int ATTR_TEXTURE = 1;
@@ -239,11 +245,24 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		jframe.setVisible(true);
 
 		palette=new JFrame("Tile Palette");
-		palette.setSize(256, 256);
 		JPanel imagePanel=new JPanel();
-		JLabel ic = new JLabel(new ImageIcon("images/sprites.png"));
-		imagePanel.add(ic);
+		imagePanel.setLayout(new BorderLayout());
+		JButton ic = new JButton(new ImageIcon(Assets.spriteImage));
+		ic.setHorizontalAlignment(SwingConstants.LEFT);
+		ic.setVerticalAlignment(SwingConstants.TOP);
+		ic.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int x=e.getX()/8; 
+				int y=e.getY()/8;
+				drawType=x+y*100;
+			}			
+		});
+		ic.setBorder(BorderFactory.createEmptyBorder());
+		imagePanel.add(ic, BorderLayout.CENTER);
 		palette.getContentPane().add(imagePanel, BorderLayout.CENTER);
+		palette.setSize(256, 256);
+		palette.setVisible(true);
 	}
 
 	@Override
