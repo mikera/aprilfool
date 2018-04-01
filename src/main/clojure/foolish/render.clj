@@ -24,80 +24,19 @@
     (visit [this ^int x ^int y ^int z value]
       (let [^App app *app*
             t (double (.getTime app))
-            cz (int (.cursorZ app))
-            ^Vector4 c c]
-        (when (<= z cz)
-          ;; main tile
-          (when-let [bshape (:block-shape value)] ;; we have a block tile
-            (let [sprx (long (or (:spritex value) 16))
-                  spry (long (or (:spritey value) 1))
-                  ^Vector4 colour (or (:colour value) Colours/WHITE)
-                  _ (.set c colour)
-                  colour-noise (:colour-noise value)
-                  _ (when colour-noise
-                      (Colours/addNoise c (double colour-noise) (Colours/hash x y z)))
-                  _ (when (< z cz)
-                      (.multiply c Colours/GREY_90)) 
-                  sx (- (* (- x y) 24) 24)
-                  sy (+ (* (+ x y) 12) (* z -32))
-                  tx (+ 8 (* 64 sprx))
-                  ty (* 64 spry)
-                  tw 48
-                  th 64]
-            
-            (.drawSprite app 
-              sx sy 48 64 ;; screen rectangle
-               (+ x y z)  ;; depth 
-               tx,ty,tw,th ;; source texture rectangle
-               c)))
-          
-          ;; floor covering
-          (when-let [fvalue (:floor value)]
-            (let [sprx (long (or (:spritex value) 16)) ;; note: use spritex from underlying tile block
-                  spry (long (or (:spritey fvalue) 1))
-	                ^Vector4 colour (or (:colour fvalue) Colours/WHITE)
-	                _ (.set c colour)
-	                colour-noise (:colour-noise fvalue)
-	                _ (when colour-noise
-	                    (Colours/addNoise c (double colour-noise) (Colours/hash x y z)))
-	                _ (when (< z cz)
-	                    (.multiply c Colours/GREY_90)) 
-	                sx (- (* (- x y) 24) 24)
-	                sy (+ (* (+ x y) 12) (* z -32))
-	                tx (+ 8 (* 64 sprx))
-	                ty (* 64 spry)
-	                tw 48
-	                th 64]
-	            
-              (.drawSprite app 
-                sx sy 48 64 ;; screen rectangle
-                (+ x y z)  ;; depth
-                tx,ty,tw,th ;; source texture rectangle
-                c)))
-          
-          ;; vegetation
-          (when-let [vvalue (:vegetation value)]
-            (let [sprx (long (or (:spritex vvalue) 0))
-                  spry (long (or (:spritey vvalue) 0))
-	                ^Vector4 colour (or (:colour vvalue) Colours/WHITE)
-	                _ (.set c colour)
-	                colour-noise (:colour-noise vvalue)
-	                _ (when colour-noise
-	                    (Colours/addNoise c (double colour-noise) (Colours/hash x y z)))
-	                _ (when (< z cz)
-	                    (.multiply c Colours/GREY_90)) 
-	                sx (- (* (- x y) 24) 24)
-	                sy (+ (* (+ x y) 12) (* z -32))
-	                tx (+ 8 (* 64 sprx))
-	                ty (* 64 spry)
-	                tw 48
-	                th 64]
-	            
-              (.drawSprite app 
-                sx sy 48 64 ;; screen rectangle
-                (+ x y z)  ;; depth
-                tx,ty,tw,th ;; source texture rectangle
-                c))))))))
+            ^Vector4 c c
+            sx (* x 8)
+            sy (* y 8)
+            tx (* (mod value 100) 8)
+            ty (* (quot value 100) 8)]
+        (.set c Colours/WHITE)
+        (.drawSprite app 
+          sx sy 8 8 ;; screen rectangle
+          z  ;; depth 
+          tx,ty,8,8 ;; source texture rectangle
+          c)
+        ;; (println tx ty)
+        ))))
 
 ;; ===================================================================================
 ;; Visitor for Map Tile rendering
@@ -142,45 +81,50 @@
 
 (defn render-sprites 
   ([game ^App app]
-    (comment
-      (binding [*app* app
-               *game* game
-               *cursor* (ocore/loc (.cursorX app) (.cursorY app) (.cursorZ app))]
+    (binding [*app* app
+             *game* game]
       
-       ;; render all map tiles
-       (let [^PersistentTreeGrid map (:world game) 
-             ^Location cursor *cursor*
-             cx (.x cursor) cy (.y cursor) cz (.z cursor)
-             ]
-        (.visitPoints map map-visitor 
-          ;; (- cx 50) (- cy 50) (- cz 50) (+ cx 50) (+ cy 50) cz
-          0 0 (- cz 50) 100 100 cz
-          )
+     ;; render all map tiles
+     (let [^PersistentTreeGrid map (:tiles game) 
+           hloc (:hero-loc game)
+           hx (float (hloc 0))
+           hy (float (hloc 1))
+           ]
        
-       ;; render things
-       (let [^PersistentTreeGrid things (:things game) 
-             ^Location cursor *cursor*
-             cx (.x cursor) cy (.y cursor) cz (.z cursor)
-             ]
-        (.visitPoints things thing-visitor 
-          ;; (- cx 50) (- cy 50) (- cz 50) (+ cx 50) (+ cy 50) cz
-          0 0 (- cz 50) 100 100 cz
-          )
+      (.drawSprite app 
+         (- hx 8) (- hy 16) 16 16 ;; screen rectangle
+          0.0  ;; depth
+          0,0,16,16 ;; source texture square block
+          Colours/WHITE)
        
-      ;; conditionally draw mouse cursor if rendering cursor location
-        (let [t (double (.getTime app))
-              alpha (+ 0.4 (* 0.3 (Math/sin (* 15 t))))
-              sx (- (* (- cx cy) 24) 24)
-              sy (+ (* (+ cx cy) 12) (* cz -32))
-              ^Vector4 c c] 
-          (.setValues c 1.0 1.0 0.0 alpha) ;; semi-transparent yellow
-          (.drawSprite app 
-            sx sy 48 64 ;; screen rectangle
-            (+ cx cy cz)  ;; depth
-            (+ 8 (* 64 17)),0,48,64 ;; source texture square block
-            c))
-       
+      (.visitPoints map map-visitor 
+        0 0 -2 100 100 2
         )
+       
+;     ;; render things
+;     (let [^PersistentTreeGrid things (:things game) 
+;           ^Location cursor *cursor*
+;           cx (.x cursor) cy (.y cursor) cz (.z cursor)
+;           ]
+;      (.visitPoints things thing-visitor 
+;        ;; (- cx 50) (- cy 50) (- cz 50) (+ cx 50) (+ cy 50) cz
+;        0 0 (- cz 50) 100 100 cz
+;        )
+;       
+;    ;; conditionally draw mouse cursor if rendering cursor location
+;      (let [t (double (.getTime app))
+;            alpha (+ 0.4 (* 0.3 (Math/sin (* 15 t))))
+;            sx (- (* (- cx cy) 24) 24)
+;            sy (+ (* (+ cx cy) 12) (* cz -32))
+;            ^Vector4 c c] 
+;        (.setValues c 1.0 1.0 0.0 alpha) ;; semi-transparent yellow
+;        (.drawSprite app 
+;          sx sy 48 64 ;; screen rectangle
+;          (+ cx cy cz)  ;; depth
+;          (+ 8 (* 64 17)),0,48,64 ;; source texture square block
+;          c))
+;       
+;      )
       
           
-       ) ))))
+     ) )))

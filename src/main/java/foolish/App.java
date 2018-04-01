@@ -36,9 +36,6 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL2;
@@ -76,7 +73,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	private int width = 10;
 	private int height = 10;
 
-	float DRAW_SCALE = 1.0f;
+	float DRAW_SCALE = 4.0f;
 
 	private int scrollX = -400;
 	private int scrollY = -200;
@@ -269,7 +266,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 
 	public void drawSprite(float x, float y, float w, float h, float z, int tx, int ty, int tw, int th, float r,
 			float g, float b, float a) {
-		float texScale = 1.0f / 2048.0f;
+		float texScale = 1.0f / 1024.0f;
 
 		x = DRAW_SCALE * x - scrollX;
 		y = DRAW_SCALE * y - scrollY;
@@ -305,7 +302,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	protected void display(GL3 gl3) {
 		// GL2 gl = (GL2) gl3;
 
-		gl3.glClearBufferfv(GL_COLOR, 0, clearColor.put(0, 0.0f).put(1, 0.5f).put(2, 1.0f).put(3, 1.0f));
+		gl3.glClearBufferfv(GL_COLOR, 0, clearColor.put(0, 0.0f).put(1, 0.0f).put(2, 0.0f).put(3, 1.0f));
 		gl3.glClearBufferfv(GL_DEPTH, 0, clearColor.put(0, 1.0f));
 
 		gl3.glUseProgram(theProgram);
@@ -333,7 +330,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 			renderFn.invoke(this.renderGameState, this);
 		}
 		// testRender(t);
-		// drawSprite(0,0,32,32,0,0,32,32,Colours.WHITE);
+		// drawSprite(0,0,16,16,0.0f,0,0,16,16,Colours.WHITE);
 		// drawSprite(32,32,32,32,32,32,32,32,Colours.WHITE);
 		// drawSprite(64,64,32,32,32,32,32,32,Colours.DARK_BROWN);
 		vertexBuffer.position(0);

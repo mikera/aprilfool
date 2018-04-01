@@ -1,6 +1,7 @@
 (ns foolish.main
   (:use mikera.cljutils.error)
-  (:import [foolish App Colours])
+  (:import [foolish App Colours]
+           [mikera.engine PersistentTreeGrid IPointVisitor])
   )
 
 
@@ -8,6 +9,31 @@
 (set! *unchecked-math* :warn-on-boxed)
 
 (defonce ^{:dynamic true :tag App} app nil)
+
+(defn set-tile [game x y z c]
+  (let [^PersistentTreeGrid tile (:tiles game)]
+    (assoc game :tiles (.set tile (int x) (int y) (int z) c))))
+
+(defn get-tile [game x y z]
+  (let [^PersistentTreeGrid tile (:tiles game)]
+    (.get tile (int x) (int y) (int z))))
+
+(defn fill-rect [game x1 y1 x2 y2 c]
+  (reduce (fn [game [x y]]
+            (set-tile game x y 0 c))
+          game
+          (for [x (range x1 (inc x2))
+                y (range y1 (inc y2))]
+            [x y])))
+
+
+(defn create-game []
+  (let [game{:tiles PersistentTreeGrid/EMPTY
+             :hero-loc [0 0]}]
+    (-> game
+      (set-tile 0 0 0 102)
+      (fill-rect 0 0 10 0 102))
+    ))
 
 (defn process-click 
   "Processes a click event from the GUI"
@@ -69,7 +95,7 @@
   ([args]
     (println "Foolish Game starting...")
     (def app (App. "Foolish"))
-    ;; (set! (.renderGameState app) (world/create-game))
+    (set! (.renderGameState app) (create-game))
     (when-not args 
       (println "Launched from REPL")
       (set! (.replLaunched app) true))
