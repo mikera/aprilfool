@@ -29,7 +29,7 @@
 
 (defn create-game []
   (let [game{:tiles PersistentTreeGrid/EMPTY
-             :hero-loc [0 0]}]
+             :sprites [{:type "Henry" :loc [0 0] :dir [0 0]}]}]
     (-> game
       (set-tile 0 0 0 102)
       (fill-rect 0 0 10 0 102))
@@ -68,12 +68,13 @@
               (println (str "Unrecognised event: " event))))))
     
     (let [game (.renderGameState app)
-          hloc (:hero-loc game)
+          hero (first (:sprites game)) 
+          hloc (:loc hero)
           [hx hy] hloc
           htile (get-tile game (Math/floor (/ hx 8)) (Math/floor (/ hy 8)) 0)
           dir [(+ (if (.goingLeft app) -1 0) (if (.goingRight app) 1 0)) (if (.jumping app) -2 (if htile 0 2))]
           [dx dy] dir
-          game (if (= dir [0 0]) game (assoc game :hero-loc [(+ hx dx) (+ hy dy)]))
+          game (if (= dir [0 0]) game (assoc-in game [:sprites 0] (assoc hero :loc [(+ hx dx) (+ hy dy)])))
           ]
       (set! (.renderGameState app) game))))
 

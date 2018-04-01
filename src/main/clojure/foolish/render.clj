@@ -86,7 +86,7 @@
       
      ;; render all map tiles
      (let [^PersistentTreeGrid map (:tiles game) 
-           hloc (:hero-loc game)
+           hloc (get-in game [:sprites 0 :loc])
            hx (float (hloc 0))
            hy (float (hloc 1))
            scale (.DRAW_SCALE app)
