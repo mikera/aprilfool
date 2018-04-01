@@ -141,7 +141,7 @@
             tx (* (mod sno 100) 8)
             ty (* (quot sno 100) 8)]
         (.drawSprite app 
-         (- x (/ w 2)) (- y h) 16 16 ;; screen rectangle
+         (- x (/ w 2)) (- y h) w h ;; screen rectangle
            0.5  ;; depth
            tx,ty,w,h ;; source texture square block
            Colours/WHITE)))
