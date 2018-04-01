@@ -68,7 +68,7 @@
   ([] (-main nil))
   ([args]
     (println "Foolish Game starting...")
-    (def app (App. "Stronghold"))
+    (def app (App. "Foolish"))
     ;; (set! (.renderGameState app) (world/create-game))
     (when-not args 
       (println "Launched from REPL")
