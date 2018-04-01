@@ -1,6 +1,6 @@
 (ns foolish.render
   (:use mikera.cljutils.error)
-  (:require [foolish.sprites :as sprites])
+  (:require [foolish.lib :as lib])
   (:import [foolish App Colours]
            [mikera.vectorz Vector4]
            [clojure.lang IPersistentVector]
@@ -133,7 +133,7 @@
       
   (let [sprites (:sprites game) ]
     (doseq [sprite sprites]
-      (let [type (or (sprites/sprite-data (:type sprite)) (error "Sprite with no data: " sprite))
+      (let [type (or (lib/sprite-data (:type sprite)) (error "Sprite with no data: " sprite))
             [x y] (:loc sprite)
             w (:width type)
             h (:height type)

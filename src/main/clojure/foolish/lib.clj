@@ -1,4 +1,4 @@
-(ns foolish.sprites)
+(ns foolish.lib)
 
 (def sprite-data 
   

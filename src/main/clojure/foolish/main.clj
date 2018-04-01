@@ -41,8 +41,8 @@
     (let [x (:x event) y (:y event) z (:z event)
           ;; game (game-state app)
           event-type (:type event)
-          tx (long (/ x 8))
-          ty (long (/ y 8))
+          tx (long (Math/floor (/ x 8)))
+          ty (long (Math/floor (/ y 8)))
           c (long (.drawType app))]
 	      (cond
          :always
