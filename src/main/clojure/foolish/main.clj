@@ -29,7 +29,7 @@
 
 (defn create-game []
   (let [game{:tiles PersistentTreeGrid/EMPTY
-             :sprites [{:type "Henry" :loc [0 0] :dir [0 0]}]}]
+             :sprites [{:type "Lucy" :loc [0 0] :dir [0 0]}]}]
     (-> game
       (set-tile 0 0 0 102)
       (fill-rect 0 0 10 0 102))
