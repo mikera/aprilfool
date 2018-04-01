@@ -1,4 +1,6 @@
 (ns foolish.render
+  (:use mikera.cljutils.error)
+  (:require [foolish.sprites :as sprites])
   (:import [foolish App Colours]
            [mikera.vectorz Vector4]
            [clojure.lang IPersistentVector]
@@ -86,7 +88,7 @@
       
      ;; render all map tiles
      (let [^PersistentTreeGrid map (:tiles game) 
-           hloc (:hero-loc game)
+           hloc (get-in game [:sprites 0 :loc])
            hx (float (hloc 0))
            hy (float (hloc 1))
            scale (.DRAW_SCALE app)
@@ -98,15 +100,11 @@
            y2 (+ y1 (/ (.height app) scale))
            ]
        
-      (.drawSprite app 
-         (- hx 8) (- hy 16) 16 16 ;; screen rectangle
-          0.5  ;; depth
-          0,0,16,16 ;; source texture square block
-          Colours/WHITE)
+      
        
       (.visitPoints map map-visitor 
         x1 y1 -2 x2 y2 2
-        )
+        ))
        
 ;     ;; render things
 ;     (let [^PersistentTreeGrid things (:things game) 
@@ -133,5 +131,18 @@
 ;       
 ;      )
       
-          
-     ) )))
+  (let [sprites (:sprites game) ]
+    (doseq [sprite sprites]
+      (let [type (or (sprites/sprite-data (:type sprite)) (error "Sprite with no data: " sprite))
+            [x y] (:loc sprite)
+            w (:width type)
+            h (:height type)
+            sno (:sprite type)
+            tx (* (mod sno 100) 8)
+            ty (* (quot sno 100) 8)]
+        (.drawSprite app 
+         (- x (/ w 2)) (- y h) 16 16 ;; screen rectangle
+           0.5  ;; depth
+           tx,ty,w,h ;; source texture square block
+           Colours/WHITE)))
+    ) )))
