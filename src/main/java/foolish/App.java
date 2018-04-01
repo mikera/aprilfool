@@ -299,7 +299,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		numQuads++;
 	}
 
-	private IFn renderFn = loadClojureFn("stronghold.render", "render-sprites");
+	private IFn renderFn = loadClojureFn("foolish.render", "render-sprites");
 
 
 	protected void display(GL3 gl3) {
@@ -561,7 +561,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	}
 
 	public static void main(String[] args) {
-		IFn clojureMain = loadClojureFn("stronghold.main", "-main");
+		IFn clojureMain = loadClojureFn("foolish.main", "-main");
 		clojureMain.invoke("Launched from Java");
 	}
 
