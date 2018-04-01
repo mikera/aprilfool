@@ -1,6 +1,6 @@
 (ns foolish.sprites)
 
-(def sprites 
+(def sprite-data 
   
   {"Henry" {:sprite 0
             :width 16
