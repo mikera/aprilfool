@@ -20,6 +20,7 @@ import static com.jogamp.opengl.GL2ES3.GL_DEPTH;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -29,18 +30,24 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL2;
@@ -71,6 +78,8 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	protected Animator animator;
 	protected int[] windowSize = new int[] { 1600, 1200 };
 	protected FloatBuffer clearColor = Buffers.newDirectFloatBuffer(4), clearDepth = Buffers.newDirectFloatBuffer(1);
+	
+	protected JFrame palette;
 
 	private final String SHADERS_ROOT = "shaders";
 	private final String VERT_SHADER_SOURCE = "vertex-shader";
@@ -167,6 +176,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		}
 
 		JMenuBar menuBar = new JMenuBar();
+		
 		{
 			JMenu menu = new JMenu("File");
 			menu.setMnemonic(KeyEvent.VK_F);
@@ -188,6 +198,39 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 			}
 			menuBar.add(menu);
 		}
+		
+		{
+			JMenu menu = new JMenu("View");
+			menu.setMnemonic(KeyEvent.VK_V);
+			
+			{
+				JMenuItem menuItem = new JMenuItem("Palette",
+                        KeyEvent.VK_P);
+				menuItem.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+				menu.add(menuItem);
+				menu.addMenuListener(new MenuListener () {
+					@Override
+					public void menuCanceled(MenuEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void menuDeselected(MenuEvent arg0) {
+					}
+
+					@Override
+					public void menuSelected(MenuEvent arg0) {
+						System.out.println("Showing palette...");
+						palette.setVisible(true);
+					}
+
+					});
+			}
+			menuBar.add(menu);
+		}
+		
 		jframe.setJMenuBar(menuBar);
 		
 		jframe.addKeyListener(this);
@@ -195,6 +238,12 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		jframe.setSize(windowSize[0], windowSize[1]);
 		jframe.setVisible(true);
 
+		palette=new JFrame("Tile Palette");
+		palette.setSize(256, 256);
+		JPanel imagePanel=new JPanel();
+		JLabel ic = new JLabel(new ImageIcon("images/sprites.png"));
+		imagePanel.add(ic);
+		palette.getContentPane().add(imagePanel, BorderLayout.CENTER);
 	}
 
 	@Override

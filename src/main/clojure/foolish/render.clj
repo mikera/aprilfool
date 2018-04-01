@@ -100,7 +100,7 @@
        
       (.drawSprite app 
          (- hx 8) (- hy 16) 16 16 ;; screen rectangle
-          0.0  ;; depth
+          0.5  ;; depth
           0,0,16,16 ;; source texture square block
           Colours/WHITE)
        
