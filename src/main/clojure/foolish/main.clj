@@ -41,25 +41,32 @@
     (let [x (:x event) y (:y event) z (:z event)
           ;; game (game-state app)
           event-type (:type event)
-          
+          tx (long (/ x 8))
+          ty (long (/ y 8))
           ]
 	      (cond
-          :else
-            (error "Click event type not recognised: " event-type)))))
+         :always
+           (set-tile game tx ty 0 102)
+         :else
+            (do 
+              (println "Click event type not recognised: " event)
+              game)))))
 
 (defn process-user-events 
   "Handle all game UI events accumulated from the App"
   ([]
-    (let [events (.retrieveEvents app)]
+    (let [game (.renderGameState app)
+          events (.retrieveEvents app)]
       (doseq [event events]
         (let [type (:event event)]
           (cond
             (= :click type)
               (do
                 ;; (println "Click event: " event)
-                (process-click event))
+                (set! (.renderGameState app) (process-click game event)))
             :else
               (println (str "Unrecognised event: " event))))))
+    
     (let [game (.renderGameState app)
           hloc (:hero-loc game)
           [hx hy] hloc

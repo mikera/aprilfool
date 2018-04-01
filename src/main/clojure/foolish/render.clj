@@ -89,6 +89,13 @@
            hloc (:hero-loc game)
            hx (float (hloc 0))
            hy (float (hloc 1))
+           scale (.DRAW_SCALE app)
+           scrx (.scrollX app)
+           scry (.scrollY app)
+           x1 (int (/ scrx scale))
+           y1 (int (/ scry scale))
+           x2 (+ x1 (/ (.width app) scale))
+           y2 (+ y1 (/ (.height app) scale))
            ]
        
       (.drawSprite app 
@@ -98,7 +105,7 @@
           Colours/WHITE)
        
       (.visitPoints map map-visitor 
-        0 0 -2 100 100 2
+        x1 y1 -2 x2 y2 2
         )
        
 ;     ;; render things

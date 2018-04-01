@@ -70,20 +70,24 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	private final String SHADERS_ROOT = "shaders";
 	private final String VERT_SHADER_SOURCE = "vertex-shader";
 	private final String FRAG_SHADER_SOURCE = "fragment-shader";
-	private int width = 10;
-	private int height = 10;
+	
+	// window width and height
+	public int width = 10;
+	public int height = 10;
 
-	float DRAW_SCALE = 4.0f;
+	public float DRAW_SCALE = 4.0f;
 
-	private int scrollX = -400;
-	private int scrollY = -200;
+	// x and y scroll in screen co-ordinates
+	public int scrollX = -400;
+	public  int scrollY = -200;
+	
 	private double scrollPosX = scrollX;
 	private double scrollPosY = scrollY;
 	private int scrollTargetX = scrollX;
 	private int scrollTargetY = scrollY;
 	public int cursorX = 0;
 	public int cursorY = 0;
-	public int cursorZ = 10;
+	public int cursorZ = 0;
 	private boolean mouseDown = false;
 	
 	private boolean running=true;
