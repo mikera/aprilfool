@@ -19,6 +19,7 @@ import static com.jogamp.opengl.GL2ES3.GL_COLOR;
 import static com.jogamp.opengl.GL2ES3.GL_DEPTH;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -36,6 +37,10 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL2;
@@ -145,7 +150,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		animator.add(glCanvas);
 		animator.start();
 
-		jframe = new JFrame("Stronghold Swing Frame");
+		jframe = new JFrame("Foolish Swing Frame");
 		jframe.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowevent) {
@@ -161,6 +166,30 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 			jframe.setIconImage(new ImageIcon(iconURL).getImage());
 		}
 
+		JMenuBar menuBar = new JMenuBar();
+		{
+			JMenu menu = new JMenu("File");
+			menu.setMnemonic(KeyEvent.VK_F);
+			
+			{
+				JMenuItem menuItem = new JMenuItem("Save",
+                        KeyEvent.VK_S);
+				menuItem.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+				menu.add(menuItem);
+			}
+			
+			{
+				JMenuItem menuItem = new JMenuItem("Load",
+                        KeyEvent.VK_L);
+				menuItem.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+				menu.add(menuItem);
+			}
+			menuBar.add(menu);
+		}
+		jframe.setJMenuBar(menuBar);
+		
 		jframe.addKeyListener(this);
 		jframe.getContentPane().add(glCanvas, BorderLayout.CENTER);
 		jframe.setSize(windowSize[0], windowSize[1]);
