@@ -10,4 +10,10 @@
    
    "Lucy" {:sprite 1200
             :width 16
-            :height 16}})
+            :height 16}  
+      
+  "Chika" {:sprite 1202
+            :width 8
+            :height 8}    
+  
+  })
