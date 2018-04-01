@@ -89,16 +89,23 @@
            hloc (:hero-loc game)
            hx (float (hloc 0))
            hy (float (hloc 1))
+           scale (.DRAW_SCALE app)
+           scrx (.scrollX app)
+           scry (.scrollY app)
+           x1 (int (/ scrx scale))
+           y1 (int (/ scry scale))
+           x2 (+ x1 (/ (.width app) scale))
+           y2 (+ y1 (/ (.height app) scale))
            ]
        
       (.drawSprite app 
          (- hx 8) (- hy 16) 16 16 ;; screen rectangle
-          0.0  ;; depth
+          0.5  ;; depth
           0,0,16,16 ;; source texture square block
           Colours/WHITE)
        
       (.visitPoints map map-visitor 
-        0 0 -2 100 100 2
+        x1 y1 -2 x2 y2 2
         )
        
 ;     ;; render things
