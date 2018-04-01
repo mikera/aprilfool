@@ -422,13 +422,29 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		// animator.stop();
 	}
 
+	public boolean goingLeft=false;
+	public boolean goingRight=false;
+	public boolean jumping=false;
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_ESCAPE:
-			jframe.dispose();
-			break;
+		  case KeyEvent.VK_ESCAPE:
+			  jframe.dispose();
+			  break;
+			  
+		  case KeyEvent.VK_LEFT:
+			  goingLeft=true;
+			  break;
+			  
+		  case KeyEvent.VK_RIGHT:
+			  goingRight=true;
+			  break;
+
+		  case KeyEvent.VK_SPACE:
+			  jumping=true;
+			  break;
 		}
 	}
 
@@ -446,6 +462,21 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		
+		switch (e.getKeyCode()) {			  
+		  case KeyEvent.VK_LEFT:
+			  goingLeft=false;
+			  break;
+			  
+		  case KeyEvent.VK_RIGHT:
+			  goingRight=false;
+			  break;
+			  
+		  case KeyEvent.VK_SPACE:
+			  jumping=false;
+			  break;
+
+		}
 	}
 
 	@Override
@@ -526,8 +557,8 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		// compute pixel co-ordinates relative to slice origin (0,0,z)
 		int px = (int) ((sx + scrollX) / DRAW_SCALE);
 		int py = (int) ((sy + scrollY) / DRAW_SCALE) + 32 * cursorZ;
-		int newCursorX = (int) Math.floor(px / 48.0 + py / 24.0);
-		int newCursorY = (int) Math.floor(py / 24.0 - px / 48.0);
+		int newCursorX = px;
+		int newCursorY = py;
 
 		boolean moved = (newCursorX != cursorX) || (newCursorY != cursorY);
 
