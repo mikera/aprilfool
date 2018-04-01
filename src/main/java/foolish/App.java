@@ -57,6 +57,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 import clojure.lang.IPersistentMap;
+import clojure.lang.PersistentHashMap;
 import mikera.vectorz.Vector4;
 
 public class App implements GLEventListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -487,8 +488,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 	}
 
 	private void addClickEvent(int x, int y, int z) {
-		IPersistentMap ev = designState.params;
-		ev = ev.assoc(Keywords.TYPE, designState.type);
+		IPersistentMap ev = PersistentHashMap.EMPTY;
 		ev = ev.assoc(Keywords.EVENT, Keywords.CLICK);
 		ev = ev.assoc(Keywords.X, cursorX);
 		ev = ev.assoc(Keywords.Y, cursorY);
@@ -520,7 +520,6 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 
 	int lastX = 0;
 	int lastY = 0;
-	public DesignState designState = new DesignState();
 
 	private boolean updateMouseLocation(int sx, int sy) {
 		lastX = sx;
@@ -533,12 +532,9 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 
 		boolean moved = (newCursorX != cursorX) || (newCursorY != cursorY);
 
-		controls.inspectorPanel.update();
-		
 		if (moved) {
 			cursorX = newCursorX;
 			cursorY = newCursorY;
-			controls.levelPanel.repaint();
 		}
 		return moved;
 	}
