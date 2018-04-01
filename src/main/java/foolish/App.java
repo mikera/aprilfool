@@ -219,6 +219,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 
 	}
 
+	@Override
 	public final void display(GLAutoDrawable drawable) {
 
 		GL3 gl3 = drawable.getGL().getGL3();
@@ -375,6 +376,7 @@ public class App implements GLEventListener, KeyListener, MouseListener, MouseMo
 		return Clojure.var(ns, var);
 	}
 
+	@Override
 	public final void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 
 		GL3 gl3 = drawable.getGL().getGL3();
